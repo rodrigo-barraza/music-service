@@ -1,0 +1,31 @@
+services:
+  music-service:
+    image: music-service:latest
+    container_name: music-service
+    restart: unless-stopped
+    ports:
+      - "5614:5614"
+    env_file:
+      - .env
+    environment:
+      - TZ=America/Los_Angeles
+    # Run as the NAS media owner (rodrigo:users) for volume ACL access
+    user: "1026:100"
+    volumes:
+      - /usr/share/zoneinfo/America/Los_Angeles:/etc/localtime:ro
+      - /volume1/media:/media:ro
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "-O", "/dev/null", "http://localhost:5614/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 2G

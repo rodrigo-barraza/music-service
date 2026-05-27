@@ -1,0 +1,18 @@
+node_modules/
+.env
+.vscode/settings.json
+
+*:Zone.Identifier
+
+# logs
+*.log
+
+# secrets
+secrets.js
+
+# temp processing
+.tmp/
+
+# TypeScript build artifacts
+dist/
+*.tsbuildinfo
