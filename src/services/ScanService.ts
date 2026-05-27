@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import type { Db } from "mongodb";
-import CONFIG from "../config.ts";
+import configuration from "../config.ts";
 import { COLLECTIONS } from "../constants.ts";
 import logger from "../logger.ts";
 
@@ -113,10 +113,10 @@ export async function runScan(): Promise<{
     const artistsCollection = database.collection(COLLECTIONS.ARTISTS);
 
     const discoveredFiles: string[] = [];
-    for (const root of CONFIG.AUDIO_ROOTS) {
+    for (const root of configuration.AUDIO_ROOTS) {
       if (fs.existsSync(root)) {
         discoveredFiles.push(
-          ...walkDirectory(root, CONFIG.SUPPORTED_EXTENSIONS),
+          ...walkDirectory(root, configuration.SUPPORTED_EXTENSIONS),
         );
       }
     }
@@ -132,7 +132,7 @@ export async function runScan(): Promise<{
 
     for (const filePath of discoveredFiles) {
       try {
-        const stat = fs.statSync(filePath);
+        const fileStats = fs.statSync(filePath);
         const fileHash = computeFileHash(filePath);
 
         if (existingPathMap.has(filePath)) {
@@ -143,7 +143,7 @@ export async function runScan(): Promise<{
               {
                 $set: {
                   ...metadata,
-                  fileSize: stat.size,
+                  fileSize: fileStats.size,
                   fileHash,
                   modifiedAt: new Date(),
                 },
@@ -157,7 +157,7 @@ export async function runScan(): Promise<{
           await tracksCollection.insertOne({
             ...metadata,
             filePath,
-            fileSize: stat.size,
+            fileSize: fileStats.size,
             fileHash,
             coverArtPath: null,
             addedAt: new Date(),

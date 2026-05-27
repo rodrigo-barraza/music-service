@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Request, Response } from "express";
-import CONFIG from "../config.ts";
+import configuration from "../config.ts";
 import logger from "../logger.ts";
 
 const AUDIO_MIME_TYPES: Record<string, string> = {
@@ -19,7 +19,7 @@ const AUDIO_MIME_TYPES: Record<string, string> = {
 };
 
 function isPathWithinAudioRoots(resolvedPath: string): boolean {
-  return CONFIG.AUDIO_ROOTS.some(
+  return configuration.AUDIO_ROOTS.some(
     (root) => resolvedPath.startsWith(root + path.sep) || resolvedPath === root,
   );
 }
@@ -38,10 +38,10 @@ export function streamAudio(filePath: string, request: Request, response: Respon
     return;
   }
 
-  const stat = fs.statSync(resolvedPath);
+  const fileStats = fs.statSync(resolvedPath);
   const fileExtension = path.extname(resolvedPath).toLowerCase();
   const mimeType = AUDIO_MIME_TYPES[fileExtension] || "application/octet-stream";
-  const fileSize = stat.size;
+  const fileSize = fileStats.size;
 
   const rangeHeader = request.headers.range;
 

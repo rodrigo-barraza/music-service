@@ -12,9 +12,9 @@ router.get("/", async (_request: Request, response: Response) => {
   response.json({ items: playlists });
 });
 
-// GET /playlists/:id — Get a single playlist
-router.get("/:id", async (request: Request, response: Response) => {
-  const playlist = await PlaylistService.getPlaylistById(request.params.id as string);
+// GET /playlists/:playlistId — Get a single playlist
+router.get("/:playlistId", async (request: Request, response: Response) => {
+  const playlist = await PlaylistService.getPlaylistById(request.params.playlistId as string);
   if (!playlist) {
     response.status(404).json({ error: "Playlist not found" });
     return;
@@ -33,10 +33,10 @@ router.post("/", async (request: Request, response: Response) => {
   response.status(201).json(playlist);
 });
 
-// PATCH /playlists/:id — Update playlist metadata
-router.patch("/:id", async (request: Request, response: Response) => {
+// PATCH /playlists/:playlistId — Update playlist metadata
+router.patch("/:playlistId", async (request: Request, response: Response) => {
   const { name, description } = request.body;
-  const updated = await PlaylistService.updatePlaylist(request.params.id as string, {
+  const updated = await PlaylistService.updatePlaylist(request.params.playlistId as string, {
     name,
     description,
   });
@@ -47,9 +47,9 @@ router.patch("/:id", async (request: Request, response: Response) => {
   response.json({ success: true });
 });
 
-// DELETE /playlists/:id — Delete a playlist
-router.delete("/:id", async (request: Request, response: Response) => {
-  const deleted = await PlaylistService.deletePlaylist(request.params.id as string);
+// DELETE /playlists/:playlistId — Delete a playlist
+router.delete("/:playlistId", async (request: Request, response: Response) => {
+  const deleted = await PlaylistService.deletePlaylist(request.params.playlistId as string);
   if (!deleted) {
     response.status(404).json({ error: "Playlist not found" });
     return;
@@ -57,15 +57,15 @@ router.delete("/:id", async (request: Request, response: Response) => {
   response.json({ success: true });
 });
 
-// POST /playlists/:id/tracks — Add a track to a playlist
-router.post("/:id/tracks", async (request: Request, response: Response) => {
+// POST /playlists/:playlistId/tracks — Add a track to a playlist
+router.post("/:playlistId/tracks", async (request: Request, response: Response) => {
   const { trackId } = request.body;
   if (!trackId || typeof trackId !== "string") {
     response.status(400).json({ error: "trackId is required" });
     return;
   }
   const added = await PlaylistService.addTrackToPlaylist(
-    request.params.id as string,
+    request.params.playlistId as string,
     trackId,
   );
   if (!added) {
@@ -75,12 +75,12 @@ router.post("/:id/tracks", async (request: Request, response: Response) => {
   response.json({ success: true });
 });
 
-// DELETE /playlists/:id/tracks/:trackId — Remove a track from a playlist
+// DELETE /playlists/:playlistId/tracks/:trackId — Remove a track from a playlist
 router.delete(
-  "/:id/tracks/:trackId",
+  "/:playlistId/tracks/:trackId",
   async (request: Request, response: Response) => {
     const removed = await PlaylistService.removeTrackFromPlaylist(
-      request.params.id as string,
+      request.params.playlistId as string,
       request.params.trackId as string,
     );
     if (!removed) {

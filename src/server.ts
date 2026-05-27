@@ -2,7 +2,7 @@
 
 import { createService } from "@rodrigo-barraza/service-library";
 import type { Application, Request, Response, NextFunction } from "express";
-import CONFIG from "./config.ts";
+import configuration from "./config.ts";
 
 // ─── Collection Setup ──────────────────────────────────────────
 import { setupCollections, init as initLibrary } from "./services/LibraryService.ts";
@@ -24,12 +24,12 @@ import type { ServiceContext } from "@rodrigo-barraza/service-library";
 await createService({
   name: "music-service",
   version: "0.1.0",
-  port: CONFIG.MUSIC_SERVICE_PORT,
+  port: configuration.MUSIC_SERVICE_PORT,
   description:
     "Audio streaming backend — local filesystem library indexing, metadata, streaming, playlists",
   mongo: {
-    uri: CONFIG.MONGODB_URI!,
-    dbName: CONFIG.MONGODB_DB_NAME,
+    uri: configuration.MONGODB_URI!,
+    dbName: configuration.MONGODB_DB_NAME,
   },
   routes: [
     { path: "/library", router: libraryRoutes },

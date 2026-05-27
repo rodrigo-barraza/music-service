@@ -22,9 +22,9 @@ router.get("/tracks", async (request: Request, response: Response) => {
   response.json(result);
 });
 
-// GET /library/tracks/:id — Get a single track by ID
-router.get("/tracks/:id", async (request: Request, response: Response) => {
-  const track = await LibraryService.getTrackById(request.params.id as string);
+// GET /library/tracks/:trackId — Get a single track by ID
+router.get("/tracks/:trackId", async (request: Request, response: Response) => {
+  const track = await LibraryService.getTrackById(request.params.trackId as string);
   if (!track) {
     response.status(404).json({ error: "Track not found" });
     return;

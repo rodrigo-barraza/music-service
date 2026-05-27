@@ -2,7 +2,7 @@
 
 import type { MusicConfig } from "./types.ts";
 
-const CONFIG: MusicConfig = {
+const configuration: MusicConfig = {
   MUSIC_SERVICE_PORT:
     parseInt(process.env.MUSIC_SERVICE_PORT ?? "", 10) || 5614,
   MONGODB_URI: process.env.MONGO_URI,
@@ -36,4 +36,4 @@ const CONFIG: MusicConfig = {
     .map((extension) => extension.trim().toLowerCase()),
 };
 
-export default CONFIG;
+export default configuration;
