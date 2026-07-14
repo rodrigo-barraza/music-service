@@ -1,6 +1,6 @@
 // ─── Entry Point ────────────────────────────────────────────
 
-import { createService } from "@rodrigo-barraza/service-library";
+import { createService } from "@rodrigo-barraza/utilities-library/service";
 import type { Application, Request, Response, NextFunction } from "express";
 import configuration from "./config.ts";
 
@@ -17,7 +17,7 @@ import playlistRoutes from "./routes/PlaylistRoutes.ts";
 import favoritesRoutes from "./routes/FavoritesRoutes.ts";
 import scanRoutes from "./routes/ScanRoutes.ts";
 
-import type { ServiceContext } from "@rodrigo-barraza/service-library";
+import type { ServiceContext } from "@rodrigo-barraza/utilities-library/service";
 
 // ─── Service Bootstrap ────────────────────────────────────────
 
