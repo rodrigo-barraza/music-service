@@ -20,7 +20,7 @@ RUN --mount=type=ssh \
 FROM deps AS build
 WORKDIR /app
 COPY . .
-RUN pnpm run build
+RUN pnpm run typecheck
 # Prune devDependencies for the runtime image
 RUN pnpm prune --prod
 
@@ -32,7 +32,7 @@ WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
 
 # Copy application source
-COPY --from=build /app/dist ./dist
+COPY --from=build /app/src ./src
 COPY --from=build /app/package.json ./package.json
 
 # Non-root user for security (docker-compose overrides with 1026:100 for NAS volume ACL)
@@ -45,4 +45,4 @@ EXPOSE 5614
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD wget --no-verbose --tries=1 -O /dev/null http://127.0.0.1:5614/health || exit 1
 
-CMD ["node", "dist/boot.js"]
+CMD ["node", "src/boot.ts"]
